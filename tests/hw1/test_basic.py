@@ -10,7 +10,7 @@ class TestExample(BaseCase):
         self.search(query)
         assert "No results found" not in self.driver.page_source
 
-    @pytest.mark.xfail("some failure")
+    @pytest.mark.xfail(reason="some failure")
     def test_negative_search(self):
         self.search("adasdasdasdasdasda")
         assert "No results found" not in self.driver.page_source
