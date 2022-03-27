@@ -33,5 +33,5 @@ class StartPage(BasePage):
 
 class MainPage(BasePage):
     def logout(self):
-        logout_btn = self.find(MainPageLocators)
+        logout_btn = self.find(MainPageLocators.LOGOUT_BUTTON)
         logout_btn.click()
