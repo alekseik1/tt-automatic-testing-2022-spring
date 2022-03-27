@@ -1,19 +1,22 @@
 import pytest
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 
 
 def pytest_addoption(parser):
     parser.addoption("--browser", default="chrome")
+    parser.addoption("--headless", action="store_true")
     parser.addoption("--url", default="https://www.python.org")
 
 
 @pytest.fixture()
 def config(request):
-    browser = request.config.getoption("--browser")
-    url = request.config.getoption("--url")
-    return {"browser": browser, "url": url}
+    return {
+        key: request.config.getoption(f"--{key}")
+        for key in ("browser", "headless", "url")
+    }
 
 
 @pytest.fixture()
@@ -21,7 +24,12 @@ def driver(config):
     browser = config["browser"]
     url = config["url"]
     if browser == "chrome":
-        driver = webdriver.Chrome(executable_path=ChromeDriverManager().install())
+        opts = Options()
+        if config["headless"]:
+            opts.add_argument("--headless")
+        driver = webdriver.Chrome(
+            executable_path=ChromeDriverManager().install(), options=opts
+        )
     elif browser == "firefox":
         driver = webdriver.Firefox(executable_path=GeckoDriverManager().install())
     else:
