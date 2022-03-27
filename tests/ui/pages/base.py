@@ -1,3 +1,5 @@
+import time
+
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
@@ -18,6 +20,9 @@ class BasePage:
     def find(self, locator, timeout=None) -> WebElement:
         return self.wait(timeout).until(EC.presence_of_element_located(locator))
 
+    def find_clickable(self, locator, timeout=None) -> WebElement:
+        return self.wait(timeout).until(EC.element_to_be_clickable(locator))
+
 
 class StartPage(BasePage):
     def full_login(self, username: str, password: str):
@@ -33,5 +38,8 @@ class StartPage(BasePage):
 
 class MainPage(BasePage):
     def logout(self):
-        logout_btn = self.find(MainPageLocators.LOGOUT_BUTTON)
+        logout_bar = self.find_clickable(MainPageLocators.LOGOUT_BAR)
+        logout_bar.click()
+        time.sleep(1)
+        logout_btn = self.find_clickable(MainPageLocators.LOGOUT_BUTTON)
         logout_btn.click()

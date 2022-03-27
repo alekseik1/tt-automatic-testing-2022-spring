@@ -19,6 +19,11 @@ class StartPageLocators:
 
 
 class MainPageLocators:
+    LOGOUT_BAR = (
+        By.XPATH,
+        "//div[contains(@class, 'right-module-rightButton') and "
+        "contains(@class, 'right-module-mail')]",
+    )
     LOGOUT_BUTTON = (
         By.XPATH,
         "//ul[contains(@class, 'rightMenu-module-rightMenu')]//a[@href='/logout']",

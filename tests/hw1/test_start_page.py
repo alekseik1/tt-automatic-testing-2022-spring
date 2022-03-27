@@ -22,6 +22,7 @@ def main_page(driver):
 
 
 @pytest.mark.UI
+@pytest.mark.skip()
 def test_can_click_login_button(start_page: StartPage):
     # GIVEN page
     # WHEN user attempts to find "login" button
@@ -32,6 +33,7 @@ def test_can_click_login_button(start_page: StartPage):
 
 
 @pytest.mark.UI
+@pytest.mark.skip()
 def test_full_login(start_page: StartPage, creds):
     # GIVEN: valid creds
     username, password = creds
