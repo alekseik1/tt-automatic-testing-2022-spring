@@ -1,5 +1,6 @@
 import time
 
+from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
@@ -23,6 +24,21 @@ class BasePage:
     def find_clickable(self, locator, timeout=None) -> WebElement:
         return self.wait(timeout).until(EC.element_to_be_clickable(locator))
 
+    def react_click(
+        self, locator, attempts: int = 5, retry_delay: float = 1.0
+    ) -> WebElement:
+        # thx react for constant reloading of elements :)
+        for i in range(attempts):
+            try:
+                elem = self.find_clickable(locator)
+                elem.click()
+                break
+            except WebDriverException:
+                if i == attempts - 1:
+                    raise
+                time.sleep(retry_delay)
+        return elem
+
 
 class StartPage(BasePage):
     def full_login(self, username: str, password: str):
@@ -38,8 +54,5 @@ class StartPage(BasePage):
 
 class MainPage(BasePage):
     def logout(self):
-        logout_bar = self.find_clickable(MainPageLocators.LOGOUT_BAR)
-        logout_bar.click()
-        time.sleep(1)
-        logout_btn = self.find_clickable(MainPageLocators.LOGOUT_BUTTON)
-        logout_btn.click()
+        self.react_click(MainPageLocators.LOGOUT_BAR)
+        self.react_click(MainPageLocators.LOGOUT_BUTTON)
