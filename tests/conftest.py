@@ -11,7 +11,7 @@ def pytest_addoption(parser):
     parser.addoption("--url", default="https://target.my.com")
 
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def config(request):
     return {
         key: request.config.getoption(f"--{key}")
